@@ -1,0 +1,4 @@
+cactus-compute
+gradio
+pillow
+numpy
