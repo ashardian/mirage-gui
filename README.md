@@ -1,3 +1,5 @@
+![Mirage GUI screenshot](assets/image.png)
+
 # Mirage GUI
 
 A small local web GUI for the [Cactus Mirage](https://huggingface.co/Cactus-Compute/mirage)
