@@ -1,5 +1,3 @@
-![Mirage GUI screenshot](assets/image.png)
-
 # Mirage GUI
 
 A small local web GUI for the [Cactus Mirage](https://huggingface.co/Cactus-Compute/mirage)
@@ -23,6 +21,8 @@ Unofficial project, not affiliated with Cactus Compute. Everything runs on your 
 - Clean main screen: image, **Run**, **Capture region** and the result. All tuning options live in a
   collapsed **Advanced options** panel at the top that you open only when you need it
 - One-command installer, app-menu shortcut, optional desktop icon
+
+![Mirage GUI screenshot](assets/image.png)
 
 ## Install (Linux)
 
