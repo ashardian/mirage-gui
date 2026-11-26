@@ -108,5 +108,20 @@ if [ "$DESKTOP_ICON" = 1 ]; then
   echo "Desktop icon created: $DESK_DIR/mirage-gui.desktop"
 fi
 
+echo "==> Optional tools for the Capture button and auto-copy"
+have_any() { for c in "$@"; do command -v "$c" > /dev/null 2>&1 && return 0; done; return 1; }
+if have_any maim flameshot gnome-screenshot spectacle scrot grim; then
+  echo "Screenshot tool: found"
+else
+  echo "No screenshot tool found. For the Capture button install one:"
+  echo "  X11:     sudo apt install maim"
+  echo "  Wayland: sudo apt install grim slurp"
+fi
+if have_any xclip xsel wl-copy; then
+  echo "Clipboard tool: found"
+else
+  echo "No clipboard tool found (only needed for auto-copy): sudo apt install xclip   (Wayland: wl-clipboard)"
+fi
+
 echo
 echo "Done. Start it from your app menu (search for 'Mirage GUI') or run: $DIR/run.sh"

@@ -14,6 +14,12 @@ Unofficial project, not affiliated with Cactus Compute. Everything runs on your 
 - Tiling for Mirage: the image is cut into overlapping tiles and each tile is zoomed, which helps with small text (RapidOCR always reads the whole image)
 - Preprocessing: auto-contrast, grayscale, invert-if-dark, sharpen
 - Annotated image with boxes, text grouped into reading-order lines, copy button, JSON download
+- **Capture region**: select an area of your screen and read it (like NormCap), with optional auto-copy to the clipboard
+- **Batch** tab: read many images at once and download the combined text and JSON
+- **Compare engines** tab: see Mirage, RapidOCR and both merged side by side on the same image
+- **About** tab: versions, detected screenshot and clipboard tools, and the Mirage methods available
+- Clean main screen: image, **Run**, **Capture region** and the result. All tuning options live in a
+  collapsed **Advanced options** panel at the top that you open only when you need it
 - One-command installer, app-menu shortcut, optional desktop icon
 
 ## Install (Linux)
@@ -95,7 +101,32 @@ If `rapidocr-onnxruntime` will not install on your Python version, use the newer
 pip install rapidocr onnxruntime
 ```
 
+## Capture a screen region
+
+On the **Image** tab, click **Capture region**. After the delay (default 3 seconds, so you can
+switch to the window you want), your screenshot tool lets you drag a rectangle. The picture is
+loaded into the app and the text is read straight away. Tick **Copy recognized text to the
+clipboard** to have it ready to paste.
+
+This needs a screenshot tool (and a clipboard tool for auto-copy). The app detects what you have
+and lists it in the **Capture tool** dropdown (**Advanced options**, Screen capture):
+
+| Session | Screenshot tool | Clipboard tool |
+|---|---|---|
+| X11 | `maim` (or flameshot, gnome-screenshot, spectacle, scrot) | `xclip` or `xsel` |
+| Wayland | `grim` + `slurp` (or spectacle, gnome-screenshot, flameshot) | `wl-clipboard` |
+
+```bash
+sudo apt install maim xclip            # X11
+sudo apt install grim slurp wl-clipboard   # Wayland
+```
+
+Restart the app after installing a tool. Not sure which session you have? Run `echo $XDG_SESSION_TYPE`.
+
 ## Using it
+
+The main screen is deliberately simple. Everything else (text engine, tiles, upscale, image cleanup,
+filters, capture tool and delay) is inside **⚙ Advanced options** at the top. Click it to open, click again to hide.
 
 1. Add an image (upload, drag in, or paste).
 2. Leave **Text engine** on "Both" if RapidOCR is ready, otherwise "Mirage".
@@ -104,6 +135,8 @@ pip install rapidocr onnxruntime
 
 Tips:
 
+- RapidOCR's default models are aimed at English and Chinese text. Other languages may need
+  different models; see the RapidOCR documentation.
 - Mirage is a tiny model and its own text reading is weak on small or low-contrast text.
   RapidOCR is usually the better text engine; Mirage is better for scene and object info.
 - Under **Filters**, "Box coordinates" is set to 0-1000 normalized, which matches the
@@ -130,7 +163,21 @@ A very common cause is installing RapidOCR into a different Python than the one 
 **Model download fails.** Check your connection and run `./install.sh` again, or just launch
 the app; it retries on first use.
 
+**The Capture button says no tool was found.** Install one (see the table above) and restart the app.
+On Wayland, `grim` only works on some compositors; on GNOME or KDE pick `gnome-screenshot` or `spectacle`
+in the **Capture tool** dropdown.
+
+**The capture grabs the browser instead of my window.** Raise the delay slider and switch windows during it.
+
+**Auto-copy does nothing.** Install `xclip`, `xsel` or `wl-clipboard`; the status line says when none is found.
+
 **Changing the port.** `./run.sh --port 7861`.
+
+## Changelog
+
+- **1.2.0**: cleaner layout with the tuning options hidden in a collapsible Advanced options panel
+- **1.1.0**: screen-region capture with optional auto-copy, Batch tab, Compare engines tab, About tab
+- **1.0.0**: tiling, RapidOCR support, preprocessing, annotated output, installer and desktop shortcut
 
 ## Update and uninstall
 
@@ -145,10 +192,30 @@ Images are processed on your machine. The app binds to `127.0.0.1` only. Do not 
 launch settings to expose it on your network unless you know what you are doing. The Mirage model
 and RapidOCR models are downloaded once from their publishers.
 
-## Credits and license
+## Credits
 
-- Mirage model by Cactus Compute (Apache-2.0 according to its model card)
-- [Gradio](https://www.gradio.app/), [Pillow](https://python-pillow.org/), [NumPy](https://numpy.org/),
-  [RapidOCR](https://github.com/RapidAI/RapidOCR)
+This project is only a thin front-end. All the heavy lifting is done by the work of others:
 
-This project is released under the MIT License (see `LICENSE`).
+- **[Cactus Compute](https://cactuscompute.com)**: creators of the
+  [Mirage](https://huggingface.co/Cactus-Compute/mirage) vision model (Apache-2.0 according to
+  its model card) and the [cactus-compute](https://pypi.org/project/cactus-compute/) runtime that runs it
+- **[RapidOCR](https://github.com/RapidAI/RapidOCR)** by the RapidAI team: the optional OCR engine
+- **[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)**: the PP-OCR text detection and
+  recognition models that RapidOCR runs
+- **[ONNX Runtime](https://onnxruntime.ai)**: runs the RapidOCR models
+- **[Gradio](https://www.gradio.app)**: the web interface
+- **[Hugging Face](https://huggingface.co)**: hosts the Mirage model files
+- **[Pillow](https://python-pillow.org)** and **[NumPy](https://numpy.org)**: image handling and arrays
+- **[OpenCV](https://opencv.org)**: used internally by RapidOCR
+
+Each of these projects has its own license and belongs to its respective authors. Please check
+their pages for details. This GUI is an unofficial community project and is not affiliated with
+or endorsed by any of them.
+
+## License
+
+The code in this repository is released under the MIT License (see `LICENSE`).
+
+---
+
+<p align="center">Made with ❤️ by <a href="https://github.com/ashardian">Ashar Dian</a></p>
